@@ -24,9 +24,7 @@ interface UseGameSocketOptions {
   onError: (message: string) => void
 }
 
-const SOCKET_URL = import.meta.env.PROD
-  ? window.location.origin
-  : 'http://localhost:3001'
+const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 
 export function useGameSocket(options: UseGameSocketOptions) {
   const socketRef = useRef<GameSocket | null>(null)
