@@ -1,0 +1,704 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gold: #d4a843;
+  --gold-light: #f4d675;
+  --gold-dark: #8b6914;
+  --gryffindor-red: #740001;
+  --slytherin-green: #1a472a;
+  --slytherin-silver: #5d5d5d;
+  --gold-glow: rgba(255, 215, 0, 0.4);
+  --gold-intense: #ffd700;
+  --quaffle-red-glow: rgba(220, 38, 38, 0.6);
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Cielo nocturno + campo verde */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(to bottom,
+    #050510 0%,
+    #0a0a1a 20%,
+    #0d1a0d 50%,
+    #0a2a0a 80%,
+    #082808 100%
+  );
+}
+
+/* Textura de césped con franjas */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(90deg,
+      transparent 0px,
+      transparent 100px,
+      rgba(0, 80, 0, 0.08) 100px,
+      rgba(0, 80, 0, 0.08) 200px
+    ),
+    radial-gradient(ellipse at center 80%,
+      rgba(34, 139, 34, 0.25) 0%,
+      transparent 70%
+    );
+  pointer-events: none;
+}
+
+#root {
+  min-height: 100vh;
+  position: relative;
+  z-index: 1;
+}
+
+/* Stadium lights container */
+.stadium-lights {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Stadium light - left */
+.stadium-light-left {
+  position: absolute;
+  top: -50px;
+  left: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 200, 0.4) 0%, transparent 70%);
+  filter: blur(30px);
+  animation: flicker 3s ease-in-out infinite;
+}
+
+/* Stadium light - right */
+.stadium-light-right {
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(255, 255, 200, 0.4) 0%, transparent 70%);
+  filter: blur(30px);
+  animation: flicker 3s ease-in-out infinite 0.5s;
+}
+
+/* Light rays */
+.light-rays {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.light-ray-left {
+  position: absolute;
+  top: 0;
+  left: 10%;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 200, 0.1) 0%, transparent 60%);
+  transform: skewX(-15deg);
+}
+
+.light-ray-right {
+  position: absolute;
+  top: 0;
+  right: 10%;
+  width: 100px;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(255, 255, 200, 0.1) 0%, transparent 60%);
+  transform: skewX(15deg);
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+  75% { opacity: 0.7; }
+}
+
+/* Ambient particles */
+.ambient-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: rgba(255, 215, 0, 0.6);
+  border-radius: 50%;
+  animation: sparkle 2s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* =============================================
+   SNITCH STYLES - CSS Pure Design
+   ============================================= */
+
+/* Snitch container - centered in parent */
+.snitch-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 256px;
+  height: 256px;
+}
+
+/* Snitch glow background - pulsing halo */
+.snitch-glow-bg {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.4) 0%, rgba(255, 215, 0, 0.1) 50%, transparent 70%);
+  border-radius: 50%;
+  filter: blur(20px);
+  animation: snitch-glow 3s ease-in-out infinite;
+}
+
+/* Snitch wrapper for floating animation */
+.snitch {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: snitch-hover 4s ease-in-out infinite;
+}
+
+/* Snitch GIF with enhanced glow */
+.snitch-gif {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.7)) drop-shadow(0 0 50px rgba(255, 215, 0, 0.3));
+}
+
+/* =============================================
+   GAME AREA - Contenedor para manos + frame
+   ============================================= */
+
+.game-area {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
+/* =============================================
+   GAME FRAME - Contenedor Visual Principal
+   ============================================= */
+
+.game-frame {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  min-height: 420px;
+  margin: 0 auto 1.5rem auto;
+  border: 3px solid rgba(212, 168, 67, 0.5);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(212, 168, 67, 0.15),
+    0 10px 40px rgba(0, 0, 0, 0.3);
+  background:
+    radial-gradient(ellipse at center 40%, rgba(212, 168, 67, 0.06) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 20%, transparent 80%, rgba(0,0,0,0.2) 100%);
+  overflow: visible;
+}
+
+/* Borde interior decorativo */
+.game-frame::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(212, 168, 67, 0.12);
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.game-frame-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+/* =============================================
+   HAND STYLES - Posicionadas fuera del frame
+   Las manos vienen desde el borde de la pantalla
+   ============================================= */
+
+.hand {
+  position: absolute;
+  top: 50%;
+  z-index: 100;
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+}
+
+.hand-left {
+  left: 0;
+  transform: translateY(-50%) translateX(-30%);
+}
+
+.hand-right {
+  right: 0;
+  transform: translateY(-50%) translateX(30%);
+}
+
+.hand img {
+  width: 320px;
+  height: auto;
+  object-fit: contain;
+}
+
+
+/* Responsive */
+@media (max-width: 768px) {
+  .game-frame {
+    min-height: 350px;
+  }
+
+  .game-frame-content {
+    min-height: 350px;
+  }
+
+  .hand img {
+    width: 200px;
+  }
+}
+
+/* =============================================
+   SNITCH ANIMATIONS
+   ============================================= */
+
+@keyframes snitch-hover {
+  0%, 100% {
+    transform: translateY(0) translateX(0) rotate(0deg);
+  }
+  20% {
+    transform: translateY(-8px) translateX(3px) rotate(1deg);
+  }
+  40% {
+    transform: translateY(-4px) translateX(-5px) rotate(-1deg);
+  }
+  60% {
+    transform: translateY(-10px) translateX(2px) rotate(0.5deg);
+  }
+  80% {
+    transform: translateY(-3px) translateX(-3px) rotate(-0.5deg);
+  }
+}
+
+@keyframes snitch-glow {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* =============================================
+   1. SNITCH SPOTLIGHT - Dramatic lighting
+   ============================================= */
+
+.snitch-container::before {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 300%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 215, 0, 0.03) 30%,
+    rgba(255, 215, 0, 0.08) 50%,
+    rgba(255, 215, 0, 0.03) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+.snitch-container.high-tension::before {
+  width: 100px;
+  opacity: 1;
+  animation: beam-pulse 2s ease-in-out infinite;
+}
+
+.snitch-glow-bg.high-tension {
+  width: 240px;
+  height: 240px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.6) 0%,
+    rgba(255, 180, 0, 0.3) 40%,
+    transparent 70%
+  );
+  animation: snitch-glow-intense 1.5s ease-in-out infinite;
+}
+
+@keyframes beam-pulse {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
+}
+
+@keyframes snitch-glow-intense {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+    filter: blur(25px);
+  }
+}
+
+/* =============================================
+   2. HAND ANIMATIONS - Wiggle + Turn glow
+   ============================================= */
+
+.hand img {
+  animation: hand-wiggle-nervous 0.12s ease-in-out infinite;
+}
+
+.hand-left img {
+  transform-origin: right center;
+}
+
+.hand-right img {
+  transform-origin: left center;
+}
+
+@keyframes hand-wiggle-nervous {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  25% { transform: translateX(2px) rotate(0.8deg); }
+  50% { transform: translateX(-1px) rotate(-0.5deg); }
+  75% { transform: translateX(1px) rotate(0.3deg); }
+}
+
+.hand.my-turn img {
+  filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.5));
+}
+
+/* =============================================
+   3. QUAFFLE ZONE - Selection feedback
+   ============================================= */
+
+.quaffle-row-container {
+  position: relative;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: 1px solid rgba(212, 168, 67, 0.15);
+  transition: all 0.3s ease;
+}
+
+.quaffle-row-container.interactive {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 215, 0, 0.1) 0%,
+    rgba(255, 215, 0, 0.04) 18%,
+    transparent 22%
+  );
+  border-color: rgba(212, 168, 67, 0.3);
+}
+
+.quaffle-row-container.interactive::before {
+  content: '';
+  position: absolute;
+  left: calc(40px * 3 + 8px * 3 + 20px);
+  top: 12px;
+  bottom: 12px;
+  border-left: 2px dashed rgba(255, 215, 0, 0.2);
+  pointer-events: none;
+}
+
+.quaffle-btn {
+  position: relative;
+}
+
+.quaffle-btn.hover-preview {
+  transform: scale(1.1) translateY(-4px);
+}
+
+.quaffle-btn.hover-preview::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 215, 0, 0.7);
+  animation: selection-ring 0.8s ease-out infinite;
+}
+
+@keyframes selection-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+.quaffle-img.red {
+  filter: drop-shadow(0 0 10px rgba(255, 50, 50, 0.7))
+          drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+}
+
+.quaffle-btn.hover-preview .quaffle-img.red {
+  filter: drop-shadow(0 0 15px rgba(255, 50, 50, 0.9))
+          drop-shadow(0 0 30px rgba(255, 0, 0, 0.6));
+}
+
+/* =============================================
+   4. TURN TRANSITIONS - Flash + shimmer
+   ============================================= */
+
+.turn-indicator {
+  position: relative;
+  overflow: hidden;
+}
+
+.turn-indicator.flash {
+  animation: turn-flash 0.6s ease-out;
+}
+
+@keyframes turn-flash {
+  0% {
+    background: rgba(255, 215, 0, 0.5) !important;
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.turn-indicator.my-turn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 215, 0, 0.25),
+    transparent
+  );
+  animation: shimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  50%, 100% { left: 100%; }
+}
+
+/* =============================================
+   5. VICTORY CELEBRATION
+   ============================================= */
+
+.victory-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  animation: victory-bg 0.8s ease-out forwards;
+}
+
+@keyframes victory-bg {
+  from { background: rgba(0, 0, 0, 0); }
+  to { background: rgba(0, 0, 0, 0.75); }
+}
+
+.victory-burst {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 215, 0, 0.9) 0%,
+    rgba(255, 180, 0, 0.5) 40%,
+    transparent 70%
+  );
+  animation: burst-expand 1s ease-out forwards;
+}
+
+@keyframes burst-expand {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  60% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(5);
+    opacity: 0;
+  }
+}
+
+.victory-card {
+  position: relative;
+  padding: 2.5rem 3rem;
+  background: linear-gradient(
+    145deg,
+    rgba(120, 53, 15, 0.95) 0%,
+    rgba(146, 64, 14, 0.95) 50%,
+    rgba(120, 53, 15, 0.95) 100%
+  );
+  border: 3px solid rgba(255, 215, 0, 0.6);
+  border-radius: 20px;
+  box-shadow:
+    0 0 50px rgba(255, 215, 0, 0.4),
+    0 25px 80px rgba(0, 0, 0, 0.6),
+    inset 0 0 40px rgba(255, 215, 0, 0.1);
+  animation: card-appear 0.6s ease-out 0.3s both;
+  text-align: center;
+}
+
+@keyframes card-appear {
+  0% {
+    transform: scale(0.7) translateY(30px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.victory-snitch {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 1.5rem;
+  animation: victory-spin 1.5s ease-out;
+}
+
+@keyframes victory-spin {
+  0% { transform: rotate(0deg) scale(0); }
+  60% { transform: rotate(540deg) scale(1.15); }
+  100% { transform: rotate(720deg) scale(1); }
+}
+
+.victory-title {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #fcd34d;
+  text-shadow:
+    0 0 20px rgba(255, 215, 0, 0.8),
+    0 2px 4px rgba(0, 0, 0, 0.5);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+  animation: title-glow 1.5s ease-in-out infinite;
+}
+
+@keyframes title-glow {
+  0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 2px 4px rgba(0, 0, 0, 0.5); }
+  50% { text-shadow: 0 0 35px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.5); }
+}
+
+.victory-subtitle {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 1.25rem;
+  color: #fbbf24;
+  margin-bottom: 2rem;
+}
+
+.defeat-card {
+  border-color: rgba(150, 120, 100, 0.5);
+  box-shadow:
+    0 0 30px rgba(100, 80, 60, 0.3),
+    0 25px 80px rgba(0, 0, 0, 0.6);
+}
+
+.defeat-title {
+  color: #d4a574;
+  animation: none;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.victory-button {
+  background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+  border: 2px solid #fcd34d;
+  color: #78350f;
+  font-weight: 700;
+  font-size: 1.1rem;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.victory-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+}
+
+/* Responsive for new features */
+@media (max-width: 640px) {
+  .snitch-container {
+    width: 200px;
+    height: 200px;
+  }
+
+  .snitch-glow-bg {
+    width: 140px;
+    height: 140px;
+  }
+
+  .snitch-glow-bg.high-tension {
+    width: 180px;
+    height: 180px;
+  }
+
+  .snitch-gif {
+    width: 160px;
+    height: 160px;
+  }
+
+  .quaffle-row-container.interactive::before {
+    left: calc(36px * 3 + 6px * 3 + 16px);
+  }
+
+  .victory-card {
+    padding: 1.5rem 2rem;
+    margin: 1rem;
+  }
+
+  .victory-title {
+    font-size: 2rem;
+  }
+
+  .victory-snitch {
+    width: 70px;
+    height: 70px;
+  }
+}
