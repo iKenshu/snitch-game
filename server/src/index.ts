@@ -9,9 +9,20 @@ const app = express();
 const httpServer = createServer(app);
 
 // CORS configuration
+const allowedOrigins = process.env.CLIENT_URL 
+  ? [process.env.CLIENT_URL, 'http://localhost:5173']
+  : ['http://localhost:5173'];
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: ['GET', 'POST'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
@@ -19,7 +30,11 @@ app.use(express.json());
 
 // Socket.io setup
 const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
-  cors: corsOptions,
+  cors: {
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
 });
 
 // Setup socket handlers
@@ -34,4 +49,6 @@ const PORT = process.env.PORT || 3001;
 
 httpServer.listen(PORT, () => {
   console.log(`🏆 Snitch Game Server running on port ${PORT}`);
+  console.log(`📡 Allowed origins: ${allowedOrigins.join(', ')}`);
+  console.log(`🌐 Client URL: ${process.env.CLIENT_URL || 'not set'}`);
 });
