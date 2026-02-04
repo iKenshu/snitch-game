@@ -13,7 +13,7 @@ export default function Snitch({ myProgress, opponentProgress }: SnitchProps) {
       <div className="snitch">
         <img
           src="/snitch.gif"
-          alt="Golden Snitch"
+          alt="Snitch Dorada"
           className="snitch-gif"
           draggable={false}
         />
@@ -56,7 +56,7 @@ export function Hands({ myProgress, opponentProgress, isPlayer1, isMyTurn }: Han
       >
         <img
           src="/izquierda.png"
-          alt={isLeftHandMine ? "My hand" : "Opponent hand"}
+          alt={isLeftHandMine ? "Mi mano" : "Mano del oponente"}
           draggable={false}
         />
       </div>
@@ -66,7 +66,7 @@ export function Hands({ myProgress, opponentProgress, isPlayer1, isMyTurn }: Han
       >
         <img
           src="/derecha.png"
-          alt={isRightHandMine ? "My hand" : "Opponent hand"}
+          alt={isRightHandMine ? "Mi mano" : "Mano del oponente"}
           draggable={false}
         />
       </div>

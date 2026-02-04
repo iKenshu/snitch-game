@@ -71,10 +71,10 @@ export default function Game({
         ))}
 
         <h2 className="text-2xl font-magic font-semibold text-yellow-300 mb-4 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-          Waiting for opponent...
+          Esperando oponente...
         </h2>
         <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
-          <p className="text-amber-300/80 mb-2">Share this code:</p>
+          <p className="text-amber-300/80 mb-2">Comparte este código:</p>
           <p className="text-4xl font-mono font-bold text-yellow-400 tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">
             {roomId}
           </p>
@@ -82,13 +82,13 @@ export default function Game({
             onClick={handleCopyShareLink}
             className="mt-4 bg-amber-700 hover:bg-amber-600 text-yellow-200 px-4 py-2 rounded-lg text-sm transition-colors"
           >
-            {copied ? 'Copied!' : 'Copy Share Link'}
+            {copied ? '¡Copiado!' : 'Copiar Enlace'}
           </button>
         </div>
 
         {spectatorCount > 0 && (
           <p className="text-purple-400 text-sm mb-4">
-            {spectatorCount} spectator{spectatorCount !== 1 ? 's' : ''} watching
+            {spectatorCount} espectador{spectatorCount !== 1 ? 'es' : ''} viendo
           </p>
         )}
 
@@ -96,7 +96,7 @@ export default function Game({
           onClick={onLeaveGame}
           className="bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 border border-yellow-600 text-yellow-200 font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.2)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]"
         >
-          Leave Room
+          Salir de la Sala
         </button>
       </div>
     )
@@ -118,19 +118,19 @@ export default function Game({
             draggable={false}
           />
           <h2 className={`victory-title ${didWin ? '' : 'defeat-title'}`}>
-            {didWin ? 'VICTORY!' : 'DEFEAT'}
+            {didWin ? '¡VICTORIA!' : 'DERROTA'}
           </h2>
           <p className="victory-subtitle">{gameOverMessage}</p>
 
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div className="text-center">
-              <p className="text-amber-300/80 font-magic text-sm mb-1">{currentPlayer?.name || 'You'}</p>
+              <p className="text-amber-300/80 font-magic text-sm mb-1">{currentPlayer?.name || 'Tú'}</p>
               <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {currentPlayer?.redQuaffles || 0}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-amber-300/80 font-magic text-sm mb-1">{opponent?.name || 'Opponent'}</p>
+              <p className="text-amber-300/80 font-magic text-sm mb-1">{opponent?.name || 'Oponente'}</p>
               <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {opponent?.redQuaffles || 0}
               </p>
@@ -138,7 +138,7 @@ export default function Game({
           </div>
 
           <button onClick={onPlayAgain} className="victory-button">
-            Play Again
+            Jugar de Nuevo
           </button>
         </div>
       </div>
@@ -186,7 +186,7 @@ export default function Game({
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
               />
             </svg>
-            {spectatorCount} watching
+            {spectatorCount} viendo
           </span>
         </div>
       )}
@@ -205,14 +205,14 @@ export default function Game({
           : 'bg-amber-900/50 border border-amber-700/50'
       }`}>
         <p className={`font-magic font-semibold text-lg tracking-wide relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-amber-400'}`}>
-          {isMyTurn ? 'Your turn!' : `${opponent?.name}'s turn...`}
+          {isMyTurn ? '¡Tu turno!' : `Turno de ${opponent?.name}...`}
         </p>
       </div>
 
       <div className="flex justify-between items-center mb-8 px-8">
         <div className="text-center">
           <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-            {gameState.players[0]?.name || 'Player 1'}
+            {gameState.players[0]?.name || 'Jugador 1'}
           </p>
           <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[0]?.redQuaffles || 0}
@@ -220,7 +220,7 @@ export default function Game({
         </div>
         <div className="text-center">
           <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
-            {gameState.players[1]?.name || 'Player 2'}
+            {gameState.players[1]?.name || 'Jugador 2'}
           </p>
           <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[1]?.redQuaffles || 0}

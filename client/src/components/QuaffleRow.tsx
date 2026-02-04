@@ -34,11 +34,11 @@ const QuaffleButton = React.memo(function QuaffleButton({
         ${isHoverPreview ? 'hover-preview' : ''}
         ${index < MAX_SELECTABLE ? 'shadow-lg shadow-black/50' : 'shadow-sm'}
       `}
-      title={isSelectable ? `Take ${index + 1} quaffle${index > 0 ? 's' : ''}` : ''}
+      title={isSelectable ? `Tomar ${index + 1} quaffle${index > 0 ? 's' : ''}` : ''}
     >
       <img
         src="/quaffle.png"
-        alt={`${quaffle.type} quaffle`}
+        alt={`quaffle ${quaffle.type === 'red' ? 'rojo' : 'gris'}`}
         className={`
           quaffle-img w-9 h-9 object-contain transition-all duration-200
           ${quaffle.type === 'red' ? 'red' : 'gray grayscale brightness-75'}

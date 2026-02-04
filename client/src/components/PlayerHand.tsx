@@ -34,7 +34,7 @@ export default function PlayerHand({ player, isCurrentPlayer, isActive }: Player
       <div className="flex items-center justify-between mb-2">
         <span className={`text-sm font-semibold truncate ${isCurrentPlayer ? 'text-yellow-300' : 'text-amber-200'}`}>
           {player.name}
-          {isCurrentPlayer && ' (You)'}
+          {isCurrentPlayer && ' (Tú)'}
         </span>
       </div>
 
@@ -56,7 +56,7 @@ export default function PlayerHand({ player, isCurrentPlayer, isActive }: Player
 
       {isActive && (
         <div className="mt-2 text-xs text-yellow-300 font-semibold animate-glow-pulse">
-          Active Turn
+          Turno Activo
         </div>
       )}
     </div>
