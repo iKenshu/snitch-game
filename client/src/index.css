@@ -385,7 +385,7 @@ body::after {
    ============================================= */
 
 .hand img {
-  animation: hand-wiggle-nervous 0.12s ease-in-out infinite;
+  animation: hand-wiggle-nervous 0.5s ease-in-out infinite;
 }
 
 .hand-left img {

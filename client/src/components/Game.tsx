@@ -26,6 +26,7 @@ interface GameProps {
   gameOverMessage: string | null
   onPlayAgain: () => void
   error: string | null
+  spectatorCount?: number
 }
 
 export default function Game({
@@ -37,7 +38,17 @@ export default function Game({
   gameOverMessage,
   onPlayAgain,
   error,
+  spectatorCount = 0,
 }: GameProps) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyShareLink = () => {
+    const url = `${window.location.origin}?room=${roomId}`
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    })
+  }
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [turnFlash, setTurnFlash] = useState(false)
   const prevTurnRef = useRef<string | null>(null)
@@ -62,12 +73,25 @@ export default function Game({
         <h2 className="text-2xl font-serif font-bold text-yellow-300 mb-4 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
           Waiting for opponent...
         </h2>
-        <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-6">
+        <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
           <p className="text-amber-300/80 mb-2">Share this code:</p>
           <p className="text-4xl font-mono font-bold text-yellow-400 tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">
             {roomId}
           </p>
+          <button
+            onClick={handleCopyShareLink}
+            className="mt-4 bg-amber-700 hover:bg-amber-600 text-yellow-200 px-4 py-2 rounded-lg text-sm transition-colors"
+          >
+            {copied ? 'Copied!' : 'Copy Share Link'}
+          </button>
         </div>
+
+        {spectatorCount > 0 && (
+          <p className="text-purple-400 text-sm mb-4">
+            {spectatorCount} spectator{spectatorCount !== 1 ? 's' : ''} watching
+          </p>
+        )}
+
         <button
           onClick={onLeaveGame}
           className="bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 border border-yellow-600 text-yellow-200 font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.2)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]"

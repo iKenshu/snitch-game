@@ -4,6 +4,10 @@ import {
   ServerToClientEvents,
   RoomResponse,
   JoinResponse,
+  RoomCheckResponse,
+  SpectatorJoinResponse,
+  Spectator,
+  MAX_SPECTATORS,
 } from '../types/game.js';
 import {
   createRoom,
@@ -11,6 +15,9 @@ import {
   updateRoom,
   deleteRoom,
   getRoomBySocketId,
+  isSpectator,
+  addSpectator,
+  removeSpectator,
 } from '../game/RoomManager.js';
 import {
   createPlayer,
@@ -160,6 +167,82 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       }
     });
 
+    // Check room status (for URL sharing)
+    socket.on('check_room', (roomId: string, callback: (response: RoomCheckResponse) => void) => {
+      const room = getRoom(roomId);
+
+      if (!room) {
+        callback({
+          exists: false,
+          canJoinAsPlayer: false,
+          canJoinAsSpectator: false,
+          playerCount: 0,
+          spectatorCount: 0,
+          gameStatus: null,
+        });
+        return;
+      }
+
+      const canJoinAsPlayer = room.gameState.players.length < 2 && room.gameState.status === 'waiting';
+      const canJoinAsSpectator = room.spectators.length < MAX_SPECTATORS;
+
+      callback({
+        exists: true,
+        canJoinAsPlayer,
+        canJoinAsSpectator,
+        playerCount: room.gameState.players.length,
+        spectatorCount: room.spectators.length,
+        gameStatus: room.gameState.status,
+      });
+    });
+
+    // Join as spectator
+    socket.on('join_as_spectator', (roomId: string, spectatorName: string, callback: (response: SpectatorJoinResponse) => void) => {
+      try {
+        const room = getRoom(roomId);
+
+        if (!room) {
+          callback({ success: false, error: 'Room not found' });
+          return;
+        }
+
+        if (room.spectators.length >= MAX_SPECTATORS) {
+          callback({ success: false, error: 'Spectator limit reached' });
+          return;
+        }
+
+        const spectator: Spectator = {
+          id: `spectator_${Date.now()}_${socket.id}`,
+          socketId: socket.id,
+          name: spectatorName,
+          joinedAt: Date.now(),
+        };
+
+        const added = addSpectator(room.id, spectator);
+        if (!added) {
+          callback({ success: false, error: 'Failed to add spectator' });
+          return;
+        }
+
+        socket.join(room.id);
+
+        console.log(`${spectatorName} joined as spectator in room ${room.id}`);
+
+        // Notify everyone in the room
+        io.to(room.id).emit('spectator_joined', spectatorName, room.spectators.length);
+
+        callback({
+          success: true,
+          spectatorId: spectator.id,
+          gameState: room.gameState,
+          spectatorCount: room.spectators.length,
+        });
+      } catch (error) {
+        console.error('Error joining as spectator:', error);
+        callback({ success: false, error: 'Failed to join as spectator' });
+      }
+    });
+
     // Leave room
     socket.on('leave_room', () => {
       handleDisconnect(socket, io);
@@ -179,6 +262,16 @@ function handleDisconnect(
 ) {
   const room = getRoomBySocketId(socket.id);
   if (!room) return;
+
+  // Check if this socket is a spectator
+  if (isSpectator(socket.id)) {
+    const spectator = removeSpectator(room.id, socket.id);
+    if (spectator) {
+      console.log(`Spectator ${spectator.name} left room ${room.id}`);
+      io.to(room.id).emit('spectator_left', spectator.name, room.spectators.length);
+    }
+    return;
+  }
 
   const player = getPlayerBySocketId(room.gameState, socket.id);
   if (!player) return;

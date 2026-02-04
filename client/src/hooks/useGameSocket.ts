@@ -6,6 +6,8 @@ import {
   GameState,
   RoomResponse,
   JoinResponse,
+  RoomCheckResponse,
+  SpectatorJoinResponse,
 } from '../types/game'
 
 type GameSocket = Socket<ServerToClientEvents, ClientToServerEvents>
@@ -22,6 +24,8 @@ interface UseGameSocketOptions {
   onGameOver: (winnerId: string, winnerName: string) => void
   onPlayerLeft: (playerName: string) => void
   onError: (message: string) => void
+  onSpectatorJoined?: (spectatorName: string, spectatorCount: number) => void
+  onSpectatorLeft?: (spectatorName: string, spectatorCount: number) => void
 }
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
@@ -83,6 +87,14 @@ export function useGameSocket(options: UseGameSocketOptions) {
       socket.on('error', (message) => {
         optionsRef.current.onError(message)
       })
+
+      socket.on('spectator_joined', (spectatorName, spectatorCount) => {
+        optionsRef.current.onSpectatorJoined?.(spectatorName, spectatorCount)
+      })
+
+      socket.on('spectator_left', (spectatorName, spectatorCount) => {
+        optionsRef.current.onSpectatorLeft?.(spectatorName, spectatorCount)
+      })
     }
 
     initSocket()
@@ -125,11 +137,40 @@ export function useGameSocket(options: UseGameSocketOptions) {
     }
   }, [])
 
+  const checkRoom = useCallback((roomId: string): Promise<RoomCheckResponse> => {
+    return new Promise((resolve) => {
+      if (!socketRef.current) {
+        resolve({
+          exists: false,
+          canJoinAsPlayer: false,
+          canJoinAsSpectator: false,
+          playerCount: 0,
+          spectatorCount: 0,
+          gameStatus: null,
+        })
+        return
+      }
+      socketRef.current.emit('check_room', roomId, resolve)
+    })
+  }, [])
+
+  const joinAsSpectator = useCallback((roomId: string, spectatorName: string): Promise<SpectatorJoinResponse> => {
+    return new Promise((resolve) => {
+      if (!socketRef.current) {
+        resolve({ success: false, error: 'Not connected' })
+        return
+      }
+      socketRef.current.emit('join_as_spectator', roomId, spectatorName, resolve)
+    })
+  }, [])
+
   return {
     createRoom,
     joinRoom,
     takeQuaffles,
     leaveRoom,
+    checkRoom,
+    joinAsSpectator,
     isConnected,
   }
 }
