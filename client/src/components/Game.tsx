@@ -27,6 +27,7 @@ interface GameProps {
   onPlayAgain: () => void
   error: string | null
   spectatorCount?: number
+  opponentDisconnected?: boolean
 }
 
 export default function Game({
@@ -39,6 +40,7 @@ export default function Game({
   onPlayAgain,
   error,
   spectatorCount = 0,
+  opponentDisconnected = false,
 }: GameProps) {
   const [copied, setCopied] = useState(false)
 
@@ -51,6 +53,7 @@ export default function Game({
   }
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
   const [turnFlash, setTurnFlash] = useState(false)
+  const [isProcessingMove, setIsProcessingMove] = useState(false)
   const prevTurnRef = useRef<string | null>(null)
 
   useEffect(() => {
@@ -60,6 +63,7 @@ export default function Game({
         setTimeout(() => setTurnFlash(false), 600)
       }
       prevTurnRef.current = gameState.currentTurnPlayerId
+      setIsProcessingMove(false)
     }
   }, [gameState?.currentTurnPlayerId])
 
@@ -150,7 +154,8 @@ export default function Game({
   const isMyTurn = gameState.currentTurnPlayerId === playerId
 
   const handleQuaffleClick = (index: number) => {
-    if (!isMyTurn || index >= MAX_SELECTABLE) return
+    if (!isMyTurn || isProcessingMove || index >= MAX_SELECTABLE) return
+    setIsProcessingMove(true)
     onTakeQuaffles(Array.from({ length: index + 1 }, (_, i) => i))
   }
 
@@ -191,9 +196,17 @@ export default function Game({
         </div>
       )}
 
-      {error && (
+      {error && !opponentDisconnected && (
         <div className="bg-red-900/50 border border-red-500 rounded-lg p-3 mb-4 backdrop-blur-sm">
           <p className="text-red-300 text-center text-sm">{error}</p>
+        </div>
+      )}
+
+      {opponentDisconnected && (
+        <div className="bg-amber-900/50 border border-amber-500 rounded-lg p-3 mb-4 backdrop-blur-sm animate-pulse">
+          <p className="text-amber-300 text-center text-sm">
+            {opponent?.name} se desconectó. Esperando reconexión...
+          </p>
         </div>
       )}
 
@@ -205,7 +218,7 @@ export default function Game({
           : 'bg-amber-900/50 border border-amber-700/50'
       }`}>
         <p className={`font-magic font-semibold text-lg tracking-wide relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-amber-400'}`}>
-          {isMyTurn ? '¡Tu turno!' : `Turno de ${opponent?.name}...`}
+          {isMyTurn ? (isProcessingMove ? 'Enviando...' : '¡Tu turno!') : `Turno de ${opponent?.name}...`}
         </p>
       </div>
 
@@ -249,7 +262,7 @@ export default function Game({
           hoveredIndex={hoveredIndex}
           onQuaffleClick={handleQuaffleClick}
           onHoverChange={handleHoverChange}
-          isInteractive={isMyTurn}
+          isInteractive={isMyTurn && !isProcessingMove}
         />
       </section>
     </main>

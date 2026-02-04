@@ -6,6 +6,7 @@ import {
   GameState,
   RoomResponse,
   JoinResponse,
+  ReconnectResponse,
   RoomCheckResponse,
   SpectatorJoinResponse,
 } from '../types/game'
@@ -23,9 +24,38 @@ interface UseGameSocketOptions {
   onGameUpdate: (state: GameState) => void
   onGameOver: (winnerId: string, winnerName: string) => void
   onPlayerLeft: (playerName: string) => void
+  onPlayerDisconnected?: (playerName: string) => void
+  onPlayerReconnected?: (playerName: string) => void
   onError: (message: string) => void
   onSpectatorJoined?: (spectatorName: string, spectatorCount: number) => void
   onSpectatorLeft?: (spectatorName: string, spectatorCount: number) => void
+}
+
+const SESSION_STORAGE_KEY = 'snitch_game_session'
+
+export interface GameSession {
+  roomId: string
+  playerId: string
+  sessionToken: string
+  playerName: string
+}
+
+export function saveGameSession(session: GameSession): void {
+  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session))
+}
+
+export function getGameSession(): GameSession | null {
+  const stored = localStorage.getItem(SESSION_STORAGE_KEY)
+  if (!stored) return null
+  try {
+    return JSON.parse(stored)
+  } catch {
+    return null
+  }
+}
+
+export function clearGameSession(): void {
+  localStorage.removeItem(SESSION_STORAGE_KEY)
 }
 
 const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
@@ -33,6 +63,7 @@ const SOCKET_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
 export function useGameSocket(options: UseGameSocketOptions) {
   const socketRef = useRef<GameSocket | null>(null)
   const [isConnected, setIsConnected] = useState(false)
+  const [isReconnecting, setIsReconnecting] = useState(false)
   const optionsRef = useRef(options)
 
   useEffect(() => {
@@ -50,6 +81,10 @@ export function useGameSocket(options: UseGameSocketOptions) {
 
       socket = io(SOCKET_URL, {
         transports: ['websocket', 'polling'],
+        reconnection: true,
+        reconnectionAttempts: 10,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
       }) as GameSocket
 
       socketRef.current = socket
@@ -57,11 +92,23 @@ export function useGameSocket(options: UseGameSocketOptions) {
       socket.on('connect', () => {
         console.log('Connected to server')
         setIsConnected(true)
+        setIsReconnecting(false)
       })
 
       socket.on('disconnect', () => {
         console.log('Disconnected from server')
         setIsConnected(false)
+        if (getGameSession()) {
+          setIsReconnecting(true)
+        }
+      })
+
+      socket.on('player_disconnected', (playerName) => {
+        optionsRef.current.onPlayerDisconnected?.(playerName)
+      })
+
+      socket.on('player_reconnected', (playerName) => {
+        optionsRef.current.onPlayerReconnected?.(playerName)
       })
 
       socket.on('game_state', (state) => {
@@ -164,6 +211,43 @@ export function useGameSocket(options: UseGameSocketOptions) {
     })
   }, [])
 
+  const reconnectGame = useCallback((roomId: string, playerId: string, sessionToken: string): Promise<ReconnectResponse> => {
+    return new Promise((resolve) => {
+      if (!socketRef.current) {
+        resolve({ success: false, error: 'Not connected' })
+        return
+      }
+      socketRef.current.emit('reconnect_game', roomId, playerId, sessionToken, resolve)
+    })
+  }, [])
+
+  const attemptReconnect = useCallback(async (): Promise<{ success: boolean; session?: GameSession }> => {
+    const session = getGameSession()
+    if (!session) {
+      return { success: false }
+    }
+
+    if (!socketRef.current?.connected) {
+      return { success: false }
+    }
+
+    console.log('Attempting to reconnect to game...', session.roomId)
+    setIsReconnecting(true)
+
+    const response = await reconnectGame(session.roomId, session.playerId, session.sessionToken)
+
+    if (response.success && response.gameState) {
+      console.log('Reconnected successfully!')
+      setIsReconnecting(false)
+      return { success: true, session }
+    } else {
+      console.log('Reconnection failed:', response.error)
+      clearGameSession()
+      setIsReconnecting(false)
+      return { success: false }
+    }
+  }, [reconnectGame])
+
   return {
     createRoom,
     joinRoom,
@@ -171,6 +255,9 @@ export function useGameSocket(options: UseGameSocketOptions) {
     leaveRoom,
     checkRoom,
     joinAsSpectator,
+    reconnectGame,
+    attemptReconnect,
     isConnected,
+    isReconnecting,
   }
 }

@@ -5,11 +5,16 @@ export interface Quaffle {
   type: QuaffleType;
 }
 
+export type PlayerConnectionStatus = 'connected' | 'disconnected';
+
 export interface Player {
   id: string;
   socketId: string;
+  sessionToken: string;
   name: string;
   redQuaffles: number;
+  connectionStatus: PlayerConnectionStatus;
+  disconnectedAt?: number;
 }
 
 export interface Spectator {
@@ -41,6 +46,7 @@ export interface Room {
 export interface ClientToServerEvents {
   create_room: (playerName: string, callback: (response: RoomResponse) => void) => void;
   join_room: (roomId: string, playerName: string, callback: (response: JoinResponse) => void) => void;
+  reconnect_game: (roomId: string, playerId: string, sessionToken: string, callback: (response: ReconnectResponse) => void) => void;
   take_quaffles: (indices: number[]) => void;
   leave_room: () => void;
   check_room: (roomId: string, callback: (response: RoomCheckResponse) => void) => void;
@@ -54,6 +60,8 @@ export interface ServerToClientEvents {
   turn_change: (playerId: string) => void;
   game_over: (winnerId: string, winnerName: string) => void;
   player_left: (playerName: string) => void;
+  player_disconnected: (playerName: string) => void;
+  player_reconnected: (playerName: string) => void;
   error: (message: string) => void;
   spectator_joined: (spectatorName: string, spectatorCount: number) => void;
   spectator_left: (spectatorName: string, spectatorCount: number) => void;
@@ -63,12 +71,20 @@ export interface RoomResponse {
   success: boolean;
   roomId?: string;
   playerId?: string;
+  sessionToken?: string;
   error?: string;
 }
 
 export interface JoinResponse {
   success: boolean;
   playerId?: string;
+  sessionToken?: string;
+  gameState?: GameState;
+  error?: string;
+}
+
+export interface ReconnectResponse {
+  success: boolean;
   gameState?: GameState;
   error?: string;
 }
@@ -95,3 +111,4 @@ export const VISIBLE_QUAFFLES = 20;
 export const MAX_SELECTABLE = 3;
 export const RED_QUAFFLE_PROBABILITY = 0.1;
 export const MAX_SPECTATORS = 20;
+export const RECONNECT_TIMEOUT_MS = 60000;

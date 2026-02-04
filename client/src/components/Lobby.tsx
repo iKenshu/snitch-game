@@ -164,9 +164,9 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
         <h3 className="text-amber-400 font-magic font-semibold mb-3">Cómo Jugar:</h3>
         <ul className="text-amber-300/60 text-sm space-y-2">
           <li>• Toma de 1 a 3 quaffles de los primeros 3 en cada turno</li>
-          <li>• Quaffles rojos = +1 punto</li>
-          <li>• Quaffles grises = 0 puntos</li>
-          <li>• ¡El primero en llegar a 10 quaffles rojos gana!</li>
+          <li>• Quaffles = +1 punto</li>
+          <li>• Bludgers = 0 puntos</li>
+          <li>• ¡La primera persona en llegar a 10 puntos gana!</li>
         </ul>
       </div>
     </div>

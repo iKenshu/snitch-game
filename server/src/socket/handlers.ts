@@ -4,6 +4,7 @@ import {
   ServerToClientEvents,
   RoomResponse,
   JoinResponse,
+  ReconnectResponse,
   RoomCheckResponse,
   SpectatorJoinResponse,
   Spectator,
@@ -18,6 +19,11 @@ import {
   isSpectator,
   addSpectator,
   removeSpectator,
+  findPlayerBySessionToken,
+  updatePlayerSocketId,
+  markPlayerDisconnected,
+  setDisconnectTimeout,
+  clearDisconnectTimeout,
 } from '../game/RoomManager.js';
 import {
   createPlayer,
@@ -34,7 +40,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
   io.on('connection', (socket: GameSocket) => {
     console.log(`Player connected: ${socket.id}`);
 
-    // Create a new room
     socket.on('create_room', (playerName: string, callback: (response: RoomResponse) => void) => {
       try {
         const room = createRoom();
@@ -43,7 +48,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
         room.gameState = addPlayerToGame(room.gameState, player);
         updateRoom(room.id, room.gameState);
 
-        // Join the socket.io room
         socket.join(room.id);
 
         console.log(`Room ${room.id} created by ${playerName}`);
@@ -52,9 +56,9 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
           success: true,
           roomId: room.id,
           playerId: player.id,
+          sessionToken: player.sessionToken,
         });
 
-        // Send initial game state
         socket.emit('game_state', room.gameState);
       } catch (error) {
         console.error('Error creating room:', error);
@@ -65,7 +69,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       }
     });
 
-    // Join an existing room
     socket.on('join_room', (roomId: string, playerName: string, callback: (response: JoinResponse) => void) => {
       try {
         const room = getRoom(roomId);
@@ -97,11 +100,9 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
         const player = createPlayer(socket.id, playerName);
         room.gameState = addPlayerToGame(room.gameState, player);
 
-        // Start the game since we have 2 players
         room.gameState = startGame(room.gameState);
         updateRoom(room.id, room.gameState);
 
-        // Join the socket.io room
         socket.join(room.id);
 
         console.log(`${playerName} joined room ${room.id}`);
@@ -109,10 +110,10 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
         callback({
           success: true,
           playerId: player.id,
+          sessionToken: player.sessionToken,
           gameState: room.gameState,
         });
 
-        // Notify both players that the game has started
         io.to(room.id).emit('game_start', room.gameState);
         io.to(room.id).emit('turn_change', room.gameState.currentTurnPlayerId!);
       } catch (error) {
@@ -124,7 +125,41 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       }
     });
 
-    // Take quaffles
+    socket.on('reconnect_game', (roomId: string, playerId: string, sessionToken: string, callback: (response: ReconnectResponse) => void) => {
+      try {
+        const room = getRoom(roomId);
+
+        if (!room) {
+          callback({ success: false, error: 'Room not found' });
+          return;
+        }
+
+        const player = findPlayerBySessionToken(roomId, sessionToken);
+
+        if (!player || player.id !== playerId) {
+          callback({ success: false, error: 'Invalid session' });
+          return;
+        }
+
+        clearDisconnectTimeout(playerId);
+        updatePlayerSocketId(roomId, playerId, socket.id);
+        socket.join(room.id);
+
+        console.log(`${player.name} reconnected to room ${room.id}`);
+
+        socket.to(room.id).emit('player_reconnected', player.name);
+
+        callback({ success: true, gameState: room.gameState });
+        socket.emit('game_state', room.gameState);
+      } catch (error) {
+        console.error('Error reconnecting:', error);
+        callback({
+          success: false,
+          error: 'Failed to reconnect',
+        });
+      }
+    });
+
     socket.on('take_quaffles', (indices: number[]) => {
       try {
         const room = getRoomBySocketId(socket.id);
@@ -149,10 +184,8 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
         room.gameState = newState;
         updateRoom(room.id, newState);
 
-        // Broadcast updated game state to both players
         io.to(room.id).emit('game_update', newState);
 
-        // Check if game is over
         if (newState.status === 'finished' && newState.winner) {
           const winner = newState.players.find(p => p.id === newState.winner);
           if (winner) {
@@ -167,7 +200,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       }
     });
 
-    // Check room status (for URL sharing)
     socket.on('check_room', (roomId: string, callback: (response: RoomCheckResponse) => void) => {
       const room = getRoom(roomId);
 
@@ -196,7 +228,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       });
     });
 
-    // Join as spectator
     socket.on('join_as_spectator', (roomId: string, spectatorName: string, callback: (response: SpectatorJoinResponse) => void) => {
       try {
         const room = getRoom(roomId);
@@ -228,7 +259,6 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
 
         console.log(`${spectatorName} joined as spectator in room ${room.id}`);
 
-        // Notify everyone in the room
         io.to(room.id).emit('spectator_joined', spectatorName, room.spectators.length);
 
         callback({
@@ -243,27 +273,25 @@ export function setupSocketHandlers(io: Server<ClientToServerEvents, ServerToCli
       }
     });
 
-    // Leave room
     socket.on('leave_room', () => {
-      handleDisconnect(socket, io);
+      handleDisconnect(socket, io, true);
     });
 
-    // Handle disconnection
     socket.on('disconnect', () => {
       console.log(`Player disconnected: ${socket.id}`);
-      handleDisconnect(socket, io);
+      handleDisconnect(socket, io, false);
     });
   });
 }
 
 function handleDisconnect(
   socket: GameSocket,
-  io: Server<ClientToServerEvents, ServerToClientEvents>
+  io: Server<ClientToServerEvents, ServerToClientEvents>,
+  isIntentionalLeave: boolean = false
 ) {
   const room = getRoomBySocketId(socket.id);
   if (!room) return;
 
-  // Check if this socket is a spectator
   if (isSpectator(socket.id)) {
     const spectator = removeSpectator(room.id, socket.id);
     if (spectator) {
@@ -276,21 +304,36 @@ function handleDisconnect(
   const player = getPlayerBySocketId(room.gameState, socket.id);
   if (!player) return;
 
-  console.log(`${player.name} left room ${room.id}`);
+  console.log(`${player.name} disconnected from room ${room.id}`);
 
-  // If game hasn't started or is finished, just delete the room
   if (room.gameState.players.length <= 1 || room.gameState.status === 'finished') {
     deleteRoom(room.id);
     return;
   }
 
-  // Notify other player
-  socket.to(room.id).emit('player_left', player.name);
+  if (isIntentionalLeave) {
+    socket.to(room.id).emit('player_left', player.name);
+    room.gameState = removePlayerFromGame(room.gameState, player.id);
+    updateRoom(room.id, room.gameState);
+    io.to(room.id).emit('game_update', room.gameState);
+    return;
+  }
 
-  // End the game
-  room.gameState = removePlayerFromGame(room.gameState, player.id);
-  updateRoom(room.id, room.gameState);
+  markPlayerDisconnected(room.id, player.id);
+  socket.to(room.id).emit('player_disconnected', player.name);
 
-  // If only one player left, they can stay in the room but game is over
-  io.to(room.id).emit('game_update', room.gameState);
+  setDisconnectTimeout(player.id, () => {
+    const currentRoom = getRoom(room.id);
+    if (!currentRoom) return;
+
+    const currentPlayer = currentRoom.gameState.players.find(p => p.id === player.id);
+    if (!currentPlayer || currentPlayer.connectionStatus === 'connected') return;
+
+    console.log(`${player.name} failed to reconnect, removing from room ${room.id}`);
+
+    io.to(room.id).emit('player_left', player.name);
+    currentRoom.gameState = removePlayerFromGame(currentRoom.gameState, player.id);
+    updateRoom(room.id, currentRoom.gameState);
+    io.to(room.id).emit('game_update', currentRoom.gameState);
+  });
 }

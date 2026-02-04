@@ -1,10 +1,10 @@
-import { Room, GameState, Spectator, MAX_SPECTATORS } from '../types/game.js';
+import { Room, GameState, Spectator, Player, MAX_SPECTATORS, RECONNECT_TIMEOUT_MS } from '../types/game.js';
 import { createInitialGameState } from './GameLogic.js';
 
-// In-memory storage for rooms
 const rooms = new Map<string, Room>();
 
-// Generate a short room code
+const disconnectTimeouts = new Map<string, NodeJS.Timeout>();
+
 export function generateRoomId(): string {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
   let result = '';
@@ -17,7 +17,6 @@ export function generateRoomId(): string {
 export function createRoom(): Room {
   let roomId = generateRoomId();
 
-  // Ensure unique room ID
   while (rooms.has(roomId)) {
     roomId = generateRoomId();
   }
@@ -94,7 +93,66 @@ export function getSpectatorCount(roomId: string): number {
   return room?.spectators.length ?? 0;
 }
 
-// Clean up old abandoned rooms (rooms older than 1 hour with no activity)
+export function findPlayerBySessionToken(roomId: string, sessionToken: string): Player | undefined {
+  const room = rooms.get(roomId.toUpperCase());
+  if (!room) return undefined;
+  return room.gameState.players.find(p => p.sessionToken === sessionToken);
+}
+
+export function updatePlayerSocketId(roomId: string, playerId: string, newSocketId: string): boolean {
+  const room = rooms.get(roomId.toUpperCase());
+  if (!room) return false;
+
+  const player = room.gameState.players.find(p => p.id === playerId);
+  if (!player) return false;
+
+  player.socketId = newSocketId;
+  player.connectionStatus = 'connected';
+  player.disconnectedAt = undefined;
+  return true;
+}
+
+export function markPlayerDisconnected(roomId: string, playerId: string): boolean {
+  const room = rooms.get(roomId.toUpperCase());
+  if (!room) return false;
+
+  const player = room.gameState.players.find(p => p.id === playerId);
+  if (!player) return false;
+
+  player.connectionStatus = 'disconnected';
+  player.disconnectedAt = Date.now();
+  return true;
+}
+
+export function setDisconnectTimeout(
+  playerId: string,
+  onTimeout: () => void
+): void {
+  clearDisconnectTimeout(playerId);
+
+  const timeout = setTimeout(onTimeout, RECONNECT_TIMEOUT_MS);
+  disconnectTimeouts.set(playerId, timeout);
+}
+
+export function clearDisconnectTimeout(playerId: string): boolean {
+  const timeout = disconnectTimeouts.get(playerId);
+  if (timeout) {
+    clearTimeout(timeout);
+    disconnectTimeouts.delete(playerId);
+    return true;
+  }
+  return false;
+}
+
+export function generateSessionToken(): string {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let result = '';
+  for (let i = 0; i < 32; i++) {
+    result += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return result;
+}
+
 export function cleanupOldRooms(): void {
   const oneHourAgo = Date.now() - 60 * 60 * 1000;
 
@@ -105,5 +163,4 @@ export function cleanupOldRooms(): void {
   }
 }
 
-// Run cleanup every 30 minutes
 setInterval(cleanupOldRooms, 30 * 60 * 1000);
