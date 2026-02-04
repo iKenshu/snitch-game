@@ -70,7 +70,7 @@ export default function Game({
           <div key={i} className="ambient-particle" style={style} />
         ))}
 
-        <h2 className="text-2xl font-serif font-bold text-yellow-300 mb-4 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+        <h2 className="text-2xl font-magic font-semibold text-yellow-300 mb-4 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
           Waiting for opponent...
         </h2>
         <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
@@ -124,14 +124,14 @@ export default function Game({
 
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div className="text-center">
-              <p className="text-amber-300/80 text-sm mb-1">{currentPlayer?.name || 'You'}</p>
-              <p className="text-3xl font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
+              <p className="text-amber-300/80 font-magic text-sm mb-1">{currentPlayer?.name || 'You'}</p>
+              <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {currentPlayer?.redQuaffles || 0}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-amber-300/80 text-sm mb-1">{opponent?.name || 'Opponent'}</p>
-              <p className="text-3xl font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
+              <p className="text-amber-300/80 font-magic text-sm mb-1">{opponent?.name || 'Opponent'}</p>
+              <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {opponent?.redQuaffles || 0}
               </p>
             </div>
@@ -164,6 +164,33 @@ export default function Game({
         <div key={i} className="ambient-particle" style={style} />
       ))}
 
+      {spectatorCount > 0 && (
+        <div className="fixed top-4 right-4 z-50">
+          <span className="bg-purple-600/80 text-white px-3 py-1.5 rounded-full text-sm backdrop-blur-sm shadow-lg flex items-center gap-2">
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+            {spectatorCount} watching
+          </span>
+        </div>
+      )}
+
       {error && (
         <div className="bg-red-900/50 border border-red-500 rounded-lg p-3 mb-4 backdrop-blur-sm">
           <p className="text-red-300 text-center text-sm">{error}</p>
@@ -177,25 +204,25 @@ export default function Game({
           ? 'my-turn bg-gradient-to-r from-yellow-600/30 via-yellow-500/40 to-yellow-600/30 border border-yellow-500 shadow-[0_0_20px_rgba(255,215,0,0.3)]'
           : 'bg-amber-900/50 border border-amber-700/50'
       }`}>
-        <p className={`font-serif font-bold relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-amber-400'}`}>
+        <p className={`font-magic font-semibold text-lg tracking-wide relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-amber-400'}`}>
           {isMyTurn ? 'Your turn!' : `${opponent?.name}'s turn...`}
         </p>
       </div>
 
       <div className="flex justify-between items-center mb-8 px-8">
         <div className="text-center">
-          <p className="text-yellow-300 font-serif font-bold text-2xl mb-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             {gameState.players[0]?.name || 'Player 1'}
           </p>
-          <p className="text-red-400 font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
+          <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[0]?.redQuaffles || 0}
           </p>
         </div>
         <div className="text-center">
-          <p className="text-yellow-300 font-serif font-bold text-2xl mb-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             {gameState.players[1]?.name || 'Player 2'}
           </p>
-          <p className="text-red-400 font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
+          <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[1]?.redQuaffles || 0}
           </p>
         </div>

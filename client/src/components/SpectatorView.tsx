@@ -27,14 +27,14 @@ export default function SpectatorView({
   if (!gameState || gameState.status === 'waiting') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 w-full max-w-md text-center backdrop-blur-sm">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
+          <div className="flex justify-center mb-4">
             <span className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
               Spectator Mode
             </span>
           </div>
 
-          <h2 className="text-2xl font-serif font-bold text-yellow-300 mb-4 mt-4 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <h2 className="text-2xl font-magic font-semibold text-yellow-300 mb-4 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             Waiting for players...
           </h2>
 
@@ -66,8 +66,8 @@ export default function SpectatorView({
 
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 w-full max-w-md text-center backdrop-blur-sm">
-          <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
+          <div className="flex justify-center mb-4">
             <span className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
               Spectator Mode
             </span>
@@ -76,11 +76,11 @@ export default function SpectatorView({
           <img
             src="/snitch.gif"
             alt="Snitch"
-            className="w-24 h-24 mx-auto mb-4 mt-4"
+            className="w-24 h-24 mx-auto mb-4"
             draggable={false}
           />
 
-          <h2 className="text-3xl font-serif font-bold text-yellow-300 mb-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <h2 className="text-3xl font-magic font-semibold text-yellow-300 mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             Game Over!
           </h2>
           <p className="text-amber-300 mb-6">
@@ -90,8 +90,8 @@ export default function SpectatorView({
           <div className="grid grid-cols-2 gap-6 mb-6">
             {gameState.players.map((player) => (
               <div key={player.id} className="text-center">
-                <p className="text-amber-300/80 text-sm mb-1">{player.name}</p>
-                <p className="text-3xl font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
+                <p className="text-amber-300/80 font-magic text-sm mb-1">{player.name}</p>
+                <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                   {player.redQuaffles}
                 </p>
               </div>
@@ -147,7 +147,7 @@ export default function SpectatorView({
       </div>
 
       <div className="turn-indicator text-center mb-6 py-3 rounded-xl bg-amber-900/50 border border-amber-700/50">
-        <p className="font-serif font-bold text-amber-400">
+        <p className="font-magic font-semibold text-lg tracking-wide text-amber-400">
           {currentTurnPlayer
             ? `${currentTurnPlayer.name}'s turn`
             : 'Waiting...'}
@@ -156,18 +156,18 @@ export default function SpectatorView({
 
       <div className="flex justify-between items-center mb-8 px-8">
         <div className="text-center">
-          <p className="text-yellow-300 font-serif font-bold text-2xl mb-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             {gameState.players[0]?.name || 'Player 1'}
           </p>
-          <p className="text-red-400 font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
+          <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[0]?.redQuaffles || 0}
           </p>
         </div>
         <div className="text-center">
-          <p className="text-yellow-300 font-serif font-bold text-2xl mb-2 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+          <p className="text-yellow-300 font-magic font-semibold text-2xl mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             {gameState.players[1]?.name || 'Player 2'}
           </p>
-          <p className="text-red-400 font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
+          <p className="text-red-400 font-magic font-bold text-6xl drop-shadow-[0_0_15px_rgba(255,0,0,0.6)]">
             {gameState.players[1]?.redQuaffles || 0}
           </p>
         </div>

@@ -16,10 +16,14 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  font-family: 'Crimson Text', Georgia, serif;
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
+}
+
+.font-magic {
+  font-family: 'Cinzel', 'Times New Roman', serif;
 }
 
 /* Cielo nocturno + campo verde */
@@ -144,6 +148,163 @@ body::after {
 @keyframes sparkle {
   0%, 100% { opacity: 0.3; transform: scale(0.8); }
   50% { opacity: 1; transform: scale(1.2); }
+}
+
+.magical-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.magic-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.9) 0%, rgba(255, 180, 0, 0.4) 50%, transparent 100%);
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.6);
+}
+
+.magic-particle:nth-child(1) { animation: float-particle-1 12s ease-in-out infinite; left: 5%; top: 20%; }
+.magic-particle:nth-child(2) { animation: float-particle-2 15s ease-in-out infinite; left: 15%; top: 60%; animation-delay: -2s; }
+.magic-particle:nth-child(3) { animation: float-particle-3 10s ease-in-out infinite; left: 25%; top: 30%; animation-delay: -4s; }
+.magic-particle:nth-child(4) { animation: float-particle-1 14s ease-in-out infinite; left: 35%; top: 70%; animation-delay: -1s; }
+.magic-particle:nth-child(5) { animation: float-particle-2 11s ease-in-out infinite; left: 45%; top: 15%; animation-delay: -3s; }
+.magic-particle:nth-child(6) { animation: float-particle-3 13s ease-in-out infinite; left: 55%; top: 50%; animation-delay: -5s; }
+.magic-particle:nth-child(7) { animation: float-particle-1 16s ease-in-out infinite; left: 65%; top: 25%; animation-delay: -2s; }
+.magic-particle:nth-child(8) { animation: float-particle-2 12s ease-in-out infinite; left: 75%; top: 65%; animation-delay: -4s; }
+.magic-particle:nth-child(9) { animation: float-particle-3 14s ease-in-out infinite; left: 85%; top: 40%; animation-delay: -1s; }
+.magic-particle:nth-child(10) { animation: float-particle-1 10s ease-in-out infinite; left: 92%; top: 80%; animation-delay: -6s; }
+.magic-particle:nth-child(11) { animation: float-particle-2 15s ease-in-out infinite; left: 10%; top: 85%; animation-delay: -3s; }
+.magic-particle:nth-child(12) { animation: float-particle-3 11s ease-in-out infinite; left: 80%; top: 10%; animation-delay: -7s; }
+
+@keyframes float-particle-1 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 0.3;
+  }
+  25% {
+    transform: translateY(-40px) translateX(15px) scale(1.2);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-20px) translateX(-10px) scale(0.8);
+    opacity: 0.5;
+  }
+  75% {
+    transform: translateY(-60px) translateX(20px) scale(1.1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes float-particle-2 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(0.8);
+    opacity: 0.4;
+  }
+  33% {
+    transform: translateY(-50px) translateX(-20px) scale(1.3);
+    opacity: 0.9;
+  }
+  66% {
+    transform: translateY(-30px) translateX(25px) scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes float-particle-3 {
+  0%, 100% {
+    transform: translateY(0) translateX(0) scale(1.1);
+    opacity: 0.5;
+  }
+  20% {
+    transform: translateY(-30px) translateX(10px) scale(0.9);
+    opacity: 0.7;
+  }
+  40% {
+    transform: translateY(-70px) translateX(-15px) scale(1.4);
+    opacity: 1;
+  }
+  60% {
+    transform: translateY(-45px) translateX(5px) scale(1);
+    opacity: 0.6;
+  }
+  80% {
+    transform: translateY(-25px) translateX(-20px) scale(1.2);
+    opacity: 0.8;
+  }
+}
+
+.quidditch-hoops {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hoop-silhouette {
+  position: absolute;
+  bottom: 0;
+  width: 60px;
+  opacity: 0.08;
+}
+
+.hoop-silhouette::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 200px;
+  background: linear-gradient(to top, #1a472a 0%, #0d2818 100%);
+  border-radius: 4px;
+}
+
+.hoop-silhouette::after {
+  content: '';
+  position: absolute;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 50px;
+  border: 6px solid #1a472a;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.hoop-silhouette.left-far { left: 3%; transform: scale(0.6); opacity: 0.04; }
+.hoop-silhouette.left-near { left: 8%; transform: scale(0.8); opacity: 0.06; }
+.hoop-silhouette.right-near { right: 8%; transform: scale(0.8); opacity: 0.06; }
+.hoop-silhouette.right-far { right: 3%; transform: scale(0.6); opacity: 0.04; }
+
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(
+    ellipse 80% 60% at 50% 50%,
+    transparent 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.3) 80%,
+    rgba(0, 0, 0, 0.6) 100%
+  );
+}
+
+.fog-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background:
+    radial-gradient(ellipse 100% 40% at 50% 100%, rgba(26, 71, 42, 0.15) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 30% at 20% 80%, rgba(26, 71, 42, 0.1) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 80% 80%, rgba(26, 71, 42, 0.1) 0%, transparent 60%);
 }
 
 /* =============================================
@@ -607,14 +768,14 @@ body::after {
 }
 
 .victory-title {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'Cinzel', Georgia, 'Times New Roman', serif;
   font-size: 3rem;
   font-weight: 700;
   color: #fcd34d;
   text-shadow:
     0 0 20px rgba(255, 215, 0, 0.8),
     0 2px 4px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.1em;
+  letter-spacing: 0.15em;
   margin-bottom: 0.5rem;
   animation: title-glow 1.5s ease-in-out infinite;
 }
@@ -625,7 +786,7 @@ body::after {
 }
 
 .victory-subtitle {
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'Crimson Text', Georgia, serif;
   font-size: 1.25rem;
   color: #fbbf24;
   margin-bottom: 2rem;
