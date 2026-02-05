@@ -69,7 +69,7 @@ export default function Game({
 
   if (!gameState || gameState.status === 'waiting') {
     return (
-      <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-yellow-600 rounded-2xl shadow-[0_0_40px_rgba(255,215,0,0.3)] p-8 w-full max-w-md text-center backdrop-blur-sm">
+      <div className="relative bg-gradient-to-b from-pitch-900/90 via-pitch-800/90 to-pitch-900/90 border-2 border-yellow-600 rounded-2xl shadow-[0_0_40px_rgba(255,215,0,0.3)] p-8 w-full max-w-md text-center backdrop-blur-sm">
         {WAITING_PARTICLES.map((style, i) => (
           <div key={i} className="ambient-particle" style={style} />
         ))}
@@ -77,14 +77,14 @@ export default function Game({
         <h2 className="text-2xl font-magic font-semibold text-yellow-300 mb-4 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
           Esperando oponente...
         </h2>
-        <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
-          <p className="text-amber-300/80 mb-2">Comparte este código:</p>
+        <div className="bg-pitch-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
+          <p className="text-yellow-300/80 mb-2">Comparte este código:</p>
           <p className="text-4xl font-mono font-bold text-yellow-400 tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">
             {roomId}
           </p>
           <button
             onClick={handleCopyShareLink}
-            className="mt-4 bg-amber-700 hover:bg-amber-600 text-yellow-200 px-4 py-2 rounded-lg text-sm transition-colors"
+            className="mt-4 bg-pitch-700 hover:bg-pitch-600 text-yellow-200 px-4 py-2 rounded-lg text-sm transition-colors"
           >
             {copied ? '¡Copiado!' : 'Copiar Enlace'}
           </button>
@@ -98,7 +98,7 @@ export default function Game({
 
         <button
           onClick={onLeaveGame}
-          className="bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 border border-yellow-600 text-yellow-200 font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.2)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]"
+          className="bg-gradient-to-b from-pitch-700 to-pitch-800 hover:from-pitch-600 hover:to-pitch-700 border border-yellow-600 text-yellow-200 font-bold py-3 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.2)] hover:shadow-[0_0_20px_rgba(255,215,0,0.4)]"
         >
           Salir de la Sala
         </button>
@@ -128,13 +128,13 @@ export default function Game({
 
           <div className="grid grid-cols-2 gap-6 mb-6">
             <div className="text-center">
-              <p className="text-amber-300/80 font-magic text-sm mb-1">{currentPlayer?.name || 'Tú'}</p>
+              <p className="text-yellow-300/80 font-magic text-sm mb-1">{currentPlayer?.name || 'Tú'}</p>
               <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {currentPlayer?.redQuaffles || 0}
               </p>
             </div>
             <div className="text-center">
-              <p className="text-amber-300/80 font-magic text-sm mb-1">{opponent?.name || 'Oponente'}</p>
+              <p className="text-yellow-300/80 font-magic text-sm mb-1">{opponent?.name || 'Oponente'}</p>
               <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                 {opponent?.redQuaffles || 0}
               </p>
@@ -203,8 +203,8 @@ export default function Game({
       )}
 
       {opponentDisconnected && (
-        <div className="bg-amber-900/50 border border-amber-500 rounded-lg p-3 mb-4 backdrop-blur-sm animate-pulse">
-          <p className="text-amber-300 text-center text-sm">
+        <div className="bg-pitch-900/50 border border-yellow-600 rounded-lg p-3 mb-4 backdrop-blur-sm animate-pulse">
+          <p className="text-yellow-300 text-center text-sm">
             {opponent?.name} se desconectó. Esperando reconexión...
           </p>
         </div>
@@ -215,9 +215,9 @@ export default function Game({
       } ${
         isMyTurn
           ? 'my-turn bg-gradient-to-r from-yellow-600/30 via-yellow-500/40 to-yellow-600/30 border border-yellow-500 shadow-[0_0_20px_rgba(255,215,0,0.3)]'
-          : 'bg-amber-900/50 border border-amber-700/50'
+          : 'bg-pitch-900/50 border border-emerald-800/50'
       }`}>
-        <p className={`font-magic font-semibold text-lg tracking-wide relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-amber-400'}`}>
+        <p className={`font-magic font-semibold text-lg tracking-wide relative z-10 ${isMyTurn ? 'text-yellow-300' : 'text-yellow-400'}`}>
           {isMyTurn ? (isProcessingMove ? 'Enviando...' : '¡Tu turno!') : `Turno de ${opponent?.name}...`}
         </p>
       </div>
@@ -256,7 +256,7 @@ export default function Game({
         </GameFrame>
       </div>
 
-      <section className="bg-gradient-to-b from-amber-900/80 to-amber-950/80 border border-yellow-700/50 rounded-2xl mb-4 backdrop-blur-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+      <section className="bg-gradient-to-b from-pitch-900/85 to-pitch-950/85 border border-yellow-700/50 rounded-2xl mb-4 backdrop-blur-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
         <QuaffleRow
           quaffles={gameState.sharedQuaffleRow}
           hoveredIndex={hoveredIndex}

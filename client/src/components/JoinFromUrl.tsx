@@ -47,8 +47,8 @@ export default function JoinFromUrl({
           {roomCode}
         </p>
 
-        <div className="bg-amber-900/50 border border-amber-600/50 rounded-lg p-4 mb-6">
-          <p className="text-amber-300 text-center">{getRoleMessage()}</p>
+        <div className="bg-pitch-900/50 border border-emerald-700/50 rounded-lg p-4 mb-6">
+          <p className="text-yellow-300 text-center">{getRoleMessage()}</p>
           <p className="text-slate-400 text-sm mt-2 text-center">
             Jugadores: {roomInfo.playerCount}/2 | Espectadores: {roomInfo.spectatorCount}
           </p>

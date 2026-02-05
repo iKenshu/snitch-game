@@ -40,12 +40,12 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
   }
 
   return (
-    <div className="bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-yellow-600/50 rounded-2xl shadow-[0_0_40px_rgba(255,215,0,0.2)] p-8 w-full max-w-md backdrop-blur-sm">
+    <div className="bg-gradient-to-b from-pitch-900/90 via-pitch-800/90 to-pitch-900/90 border-2 border-yellow-600/50 rounded-2xl shadow-[0_0_40px_rgba(255,215,0,0.2)] p-8 w-full max-w-md backdrop-blur-sm">
       <div className="text-center mb-8">
         <h1 className="text-4xl font-magic font-bold text-yellow-400 mb-2 tracking-wider drop-shadow-[0_0_15px_rgba(255,215,0,0.5)]">
           Atrapa la Snitch
         </h1>
-        <p className="text-amber-300/70">Un juego mágico de quaffles</p>
+        <p className="text-emerald-300/60">Un juego mágico de quaffles</p>
       </div>
 
       {!isConnected && (
@@ -67,7 +67,7 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
             onMouseEnter={preloadGameAssets}
             onFocus={preloadGameAssets}
             disabled={!isConnected}
-            className="w-full bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-amber-900 disabled:to-amber-950 disabled:cursor-not-allowed text-amber-950 font-magic font-semibold py-4 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:shadow-[0_0_25px_rgba(255,215,0,0.5)]"
+            className="w-full bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-pitch-900 disabled:to-pitch-950 disabled:cursor-not-allowed text-green-950 font-magic font-semibold py-4 px-6 rounded-xl transition-all shadow-[0_0_15px_rgba(255,215,0,0.3)] hover:shadow-[0_0_25px_rgba(255,215,0,0.5)]"
           >
             Crear Partida
           </button>
@@ -76,7 +76,7 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
             onMouseEnter={preloadGameAssets}
             onFocus={preloadGameAssets}
             disabled={!isConnected}
-            className="w-full bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 disabled:from-amber-900 disabled:to-amber-950 disabled:cursor-not-allowed text-yellow-200 font-magic font-semibold py-4 px-6 rounded-xl transition-all border border-yellow-700/50"
+            className="w-full bg-gradient-to-b from-pitch-700 to-pitch-800 hover:from-pitch-600 hover:to-pitch-700 disabled:from-pitch-900 disabled:to-pitch-950 disabled:cursor-not-allowed text-yellow-200 font-magic font-semibold py-4 px-6 rounded-xl transition-all border border-yellow-700/50"
           >
             Unirse a Partida
           </button>
@@ -86,13 +86,13 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
       {mode === 'create' && (
         <form onSubmit={handleCreate} className="space-y-4">
           <div>
-            <label className="block text-amber-300/80 mb-2">Tu Nombre</label>
+            <label className="block text-yellow-300/80 mb-2">Tu Nombre</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ingresa tu nombre"
-              className="w-full bg-amber-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-100 placeholder-amber-600/60 focus:outline-none focus:border-yellow-500"
+              className="w-full bg-pitch-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-100 placeholder-emerald-700/60 focus:outline-none focus:border-yellow-500"
               maxLength={20}
               autoFocus
             />
@@ -101,14 +101,14 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
             <button
               type="button"
               onClick={() => setMode('select')}
-              className="flex-1 bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-yellow-200 font-semibold py-3 px-4 rounded-xl transition-colors border border-yellow-700/50"
+              className="flex-1 bg-gradient-to-b from-pitch-700 to-pitch-800 hover:from-pitch-600 hover:to-pitch-700 text-yellow-200 font-semibold py-3 px-4 rounded-xl transition-colors border border-yellow-700/50"
             >
               Volver
             </button>
             <button
               type="submit"
               disabled={!name.trim()}
-              className="flex-1 bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-amber-900 disabled:to-amber-950 disabled:text-amber-700 disabled:cursor-not-allowed text-amber-950 font-semibold py-3 px-4 rounded-xl transition-colors"
+              className="flex-1 bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-pitch-900 disabled:to-pitch-950 disabled:text-green-800 disabled:cursor-not-allowed text-green-950 font-semibold py-3 px-4 rounded-xl transition-colors"
             >
               Crear
             </button>
@@ -119,25 +119,25 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
       {mode === 'join' && (
         <form onSubmit={handleJoin} className="space-y-4">
           <div>
-            <label className="block text-amber-300/80 mb-2">Tu Nombre</label>
+            <label className="block text-yellow-300/80 mb-2">Tu Nombre</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ingresa tu nombre"
-              className="w-full bg-amber-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-100 placeholder-amber-600/60 focus:outline-none focus:border-yellow-500"
+              className="w-full bg-pitch-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-100 placeholder-emerald-700/60 focus:outline-none focus:border-yellow-500"
               maxLength={20}
               autoFocus
             />
           </div>
           <div>
-            <label className="block text-amber-300/80 mb-2">Código de Sala</label>
+            <label className="block text-yellow-300/80 mb-2">Código de Sala</label>
             <input
               type="text"
               value={roomCode}
               onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
               placeholder="XXXX"
-              className="w-full bg-amber-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-400 placeholder-amber-600/60 focus:outline-none focus:border-yellow-500 uppercase text-center tracking-widest text-xl font-mono"
+              className="w-full bg-pitch-950/50 border border-yellow-700/50 rounded-lg px-4 py-3 text-yellow-400 placeholder-emerald-700/60 focus:outline-none focus:border-yellow-500 uppercase text-center tracking-widest text-xl font-mono"
               maxLength={4}
             />
           </div>
@@ -145,14 +145,14 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
             <button
               type="button"
               onClick={() => setMode('select')}
-              className="flex-1 bg-gradient-to-b from-amber-700 to-amber-800 hover:from-amber-600 hover:to-amber-700 text-yellow-200 font-semibold py-3 px-4 rounded-xl transition-colors border border-yellow-700/50"
+              className="flex-1 bg-gradient-to-b from-pitch-700 to-pitch-800 hover:from-pitch-600 hover:to-pitch-700 text-yellow-200 font-semibold py-3 px-4 rounded-xl transition-colors border border-yellow-700/50"
             >
               Volver
             </button>
             <button
               type="submit"
               disabled={!name.trim() || !roomCode.trim()}
-              className="flex-1 bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-amber-900 disabled:to-amber-950 disabled:text-amber-700 disabled:cursor-not-allowed text-amber-950 font-semibold py-3 px-4 rounded-xl transition-colors"
+              className="flex-1 bg-gradient-to-b from-yellow-500 to-yellow-600 hover:from-yellow-400 hover:to-yellow-500 disabled:from-pitch-900 disabled:to-pitch-950 disabled:text-green-800 disabled:cursor-not-allowed text-green-950 font-semibold py-3 px-4 rounded-xl transition-colors"
             >
               Unirse
             </button>
@@ -161,8 +161,8 @@ export default function Lobby({ onCreateRoom, onJoinRoom, error, isConnected }: 
       )}
 
       <div className="mt-8 pt-6 border-t border-yellow-700/30">
-        <h3 className="text-amber-400 font-magic font-semibold mb-3">Cómo Jugar:</h3>
-        <ul className="text-amber-300/60 text-sm space-y-2">
+        <h3 className="text-yellow-400/80 font-magic font-semibold mb-3">Cómo Jugar:</h3>
+        <ul className="text-emerald-400/50 text-sm space-y-2">
           <li>• Toma de 1 a 3 quaffles de los primeros 3 en cada turno</li>
           <li>• Quaffles = +1 punto</li>
           <li>• Bludgers = 0 puntos</li>

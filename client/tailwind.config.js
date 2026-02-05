@@ -71,6 +71,13 @@ export default {
       colors: {
         'quidditch-gold': '#FFD700',
         'quidditch-dark-gold': '#B8860B',
+        'pitch': {
+          600: '#1f5c35',
+          700: '#1a472a',
+          800: '#163d24',
+          900: '#0f2e1a',
+          950: '#091a0f',
+        },
       },
     },
   },

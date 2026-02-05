@@ -729,9 +729,9 @@ body::after {
   padding: 2.5rem 3rem;
   background: linear-gradient(
     145deg,
-    rgba(120, 53, 15, 0.95) 0%,
-    rgba(146, 64, 14, 0.95) 50%,
-    rgba(120, 53, 15, 0.95) 100%
+    rgba(15, 46, 26, 0.95) 0%,
+    rgba(22, 61, 36, 0.95) 50%,
+    rgba(15, 46, 26, 0.95) 100%
   );
   border: 3px solid rgba(255, 215, 0, 0.6);
   border-radius: 20px;
@@ -793,14 +793,14 @@ body::after {
 }
 
 .defeat-card {
-  border-color: rgba(150, 120, 100, 0.5);
+  border-color: rgba(100, 140, 120, 0.4);
   box-shadow:
-    0 0 30px rgba(100, 80, 60, 0.3),
+    0 0 30px rgba(15, 46, 26, 0.4),
     0 25px 80px rgba(0, 0, 0, 0.6);
 }
 
 .defeat-title {
-  color: #d4a574;
+  color: #86efac;
   animation: none;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
@@ -808,7 +808,7 @@ body::after {
 .victory-button {
   background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
   border: 2px solid #fcd34d;
-  color: #78350f;
+  color: #052e16;
   font-weight: 700;
   font-size: 1.1rem;
   padding: 1rem 2.5rem;

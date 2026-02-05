@@ -27,7 +27,7 @@ export default function SpectatorView({
   if (!gameState || gameState.status === 'waiting') {
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
+        <div className="relative bg-gradient-to-b from-pitch-900/90 via-pitch-800/90 to-pitch-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
           <div className="flex justify-center mb-4">
             <span className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
               Modo Espectador
@@ -38,8 +38,8 @@ export default function SpectatorView({
             Esperando jugadores...
           </h2>
 
-          <div className="bg-amber-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
-            <p className="text-amber-300/80 mb-2">Código de Sala:</p>
+          <div className="bg-pitch-950/50 border border-yellow-700/50 rounded-xl p-6 mb-4">
+            <p className="text-yellow-300/80 mb-2">Código de Sala:</p>
             <p className="text-4xl font-mono font-bold text-yellow-400 tracking-widest drop-shadow-[0_0_15px_rgba(255,215,0,0.6)]">
               {roomId}
             </p>
@@ -66,7 +66,7 @@ export default function SpectatorView({
 
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="relative bg-gradient-to-b from-amber-900/90 via-amber-800/90 to-amber-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
+        <div className="relative bg-gradient-to-b from-pitch-900/90 via-pitch-800/90 to-pitch-900/90 border-2 border-purple-600 rounded-2xl shadow-[0_0_40px_rgba(168,85,247,0.3)] p-8 pt-6 w-full max-w-md text-center backdrop-blur-sm">
           <div className="flex justify-center mb-4">
             <span className="bg-purple-600 text-white px-4 py-1 rounded-full text-sm font-bold">
               Modo Espectador
@@ -83,14 +83,14 @@ export default function SpectatorView({
           <h2 className="text-3xl font-magic font-semibold text-yellow-300 mb-2 tracking-wide drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">
             ¡Fin del Juego!
           </h2>
-          <p className="text-amber-300 mb-6">
+          <p className="text-yellow-300 mb-6">
             ¡{winner?.name || 'Alguien'} gana!
           </p>
 
           <div className="grid grid-cols-2 gap-6 mb-6">
             {gameState.players.map((player) => (
               <div key={player.id} className="text-center">
-                <p className="text-amber-300/80 font-magic text-sm mb-1">{player.name}</p>
+                <p className="text-yellow-300/80 font-magic text-sm mb-1">{player.name}</p>
                 <p className="text-3xl font-magic font-bold text-red-400 drop-shadow-[0_0_10px_rgba(255,0,0,0.6)]">
                   {player.redQuaffles}
                 </p>
@@ -146,8 +146,8 @@ export default function SpectatorView({
         </span>
       </div>
 
-      <div className="turn-indicator text-center mb-6 py-3 rounded-xl bg-amber-900/50 border border-amber-700/50">
-        <p className="font-magic font-semibold text-lg tracking-wide text-amber-400">
+      <div className="turn-indicator text-center mb-6 py-3 rounded-xl bg-pitch-900/50 border border-emerald-800/50">
+        <p className="font-magic font-semibold text-lg tracking-wide text-yellow-400">
           {currentTurnPlayer
             ? `Turno de ${currentTurnPlayer.name}`
             : 'Esperando...'}
@@ -188,7 +188,7 @@ export default function SpectatorView({
         </GameFrame>
       </div>
 
-      <section className="bg-gradient-to-b from-amber-900/80 to-amber-950/80 border border-yellow-700/50 rounded-2xl mb-4 backdrop-blur-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+      <section className="bg-gradient-to-b from-pitch-900/85 to-pitch-950/85 border border-yellow-700/50 rounded-2xl mb-4 backdrop-blur-sm shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
         <QuaffleRow
           quaffles={gameState.sharedQuaffleRow}
           hoveredIndex={null}

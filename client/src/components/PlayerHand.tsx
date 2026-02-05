@@ -14,7 +14,7 @@ export default function PlayerHand({ player, isCurrentPlayer, isActive }: Player
     <div
       className={`
         relative animate-float
-        bg-gradient-to-b from-amber-900 via-amber-800 to-amber-900
+        bg-gradient-to-b from-pitch-900 via-pitch-800 to-pitch-900
         border-2 border-yellow-600
         rounded-xl p-4 min-w-[140px]
         shadow-[0_0_20px_rgba(255,215,0,0.3)]
@@ -32,7 +32,7 @@ export default function PlayerHand({ player, isCurrentPlayer, isActive }: Player
       <div className="absolute -bottom-1 -right-1 w-3 h-3 border-b-2 border-r-2 border-yellow-500 rounded-br"></div>
 
       <div className="flex items-center justify-between mb-2">
-        <span className={`text-sm font-semibold truncate ${isCurrentPlayer ? 'text-yellow-300' : 'text-amber-200'}`}>
+        <span className={`text-sm font-semibold truncate ${isCurrentPlayer ? 'text-yellow-300' : 'text-emerald-200'}`}>
           {player.name}
           {isCurrentPlayer && ' (Tú)'}
         </span>
@@ -49,7 +49,7 @@ export default function PlayerHand({ player, isCurrentPlayer, isActive }: Player
         ))}
       </div>
 
-      <div className="text-amber-300/80 text-sm">
+      <div className="text-yellow-300/80 text-sm">
         <span className="text-red-400 font-bold drop-shadow-[0_0_4px_rgba(255,0,0,0.5)]">{redQuaffles}</span>
         <span>/{QUAFFLES_TO_WIN}</span>
       </div>
